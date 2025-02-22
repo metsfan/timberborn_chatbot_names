@@ -3,3 +3,5 @@ obj/
 lib/*.dll
 Timberborn
 *.zip
+.idea
+Folder.DotSettings.user

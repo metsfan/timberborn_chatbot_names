@@ -1,9 +1,14 @@
 {
-    "name": "CustomNameList",
-    "version_number": "0.1.1",
-    "website_url": "https://github.com/thundersen/timberborn_customnamelist",
-    "description": "Add a custom name list for your beavers",
-    "dependencies": [
-        "BepInEx-BepInExPack_Timberborn-5.4.16"
+    "Name": "ChatbotNames",
+    "Version": "5.0.3",
+    "Id": "Metsfan.ChatbotNames",
+    "MinimumGameVersion": "0.6.7.0",
+    "Description": "Pick names of people who signed up in the chatbot",
+    "RequiredMods": [
+        {
+            "Id": "Harmony",
+            "MinimumVersion": "2.3.3"
+        }
     ]
 }
+

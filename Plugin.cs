@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CustomNameList
 {
-    [BepInPlugin("com.thundersen.timberborn.customnamelist", "Custom Name List", "0.0.0.1")]
+    [BepInPlugin("com.aeskreis.beavernamelist", "Beaver Name Queue", "0.0.0.1")]
     [BepInProcess("Timberborn.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -25,7 +25,7 @@ namespace CustomNameList
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
-            Logger.LogInfo($"Plugin com.thundersen.timberborn.customnamelist is loaded!");
+            Logger.LogInfo($"Plugin com.aeskreis.beavernamelist is loaded!");
         }
     }
 }

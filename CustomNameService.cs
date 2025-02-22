@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +8,7 @@ using System;
 namespace CustomNameList
 {
     class CustomNameService {
-        private static Random rng = new Random();
         private readonly string _textFile;
-        private List<String> _allNames;
-        private Stack<String> _nextNames;
 
         internal bool IsInitialized { get; private set; }
 
@@ -24,26 +23,23 @@ namespace CustomNameList
                 return;
             }
 
-            _allNames = File.ReadAllLines(_textFile).ToList().Select(e => e.Trim().Replace("\r", "")).ToList();
-
-            Plugin.Log.LogInfo($"Read {_allNames.Count()} names from {_textFile}");
-
-            RefillNames();
-
             IsInitialized = true;
         }
 
-        internal String NextName() {
-            if(_nextNames.Count == 0)
-                RefillNames();
-
-            var nextName = _nextNames.Pop();
-
+        internal String? NextName()
+        {
+            var allNames = File.ReadAllLines(_textFile).ToList().Select(e => e.Trim().Replace("\r", "")).ToList();
+            if (allNames.Count == 0)
+            {
+                return null;
+            }
+            
+            var nextName = allNames[0];
+            allNames.RemoveAt(0);
+            
+            File.WriteAllLines(_textFile, allNames);
+            
             return nextName;
-        }
-
-        private void RefillNames() {
-            _nextNames = new Stack<String>(_allNames.OrderBy(a => rng.Next()));
         }
     }
 }

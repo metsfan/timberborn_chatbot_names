@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>CustomNameList</AssemblyName>
     <Description>Custom Name List Loader for Timberborn</Description>
     <Version>0.0.1</Version>
@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+
+    <PackageReference Include="TimberApi" Version="0.6.5" />
+
+    <PackageReference Include="Timberborn.GameLibs" Version="0.6.9-r.0" />
+
+    <PackageReference Include="UnityEngine" Version="5.6.1" />
 
     <Reference Include="netstandard" />
 
