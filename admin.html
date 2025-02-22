@@ -7,20 +7,20 @@
     <script>
         $(document).ready(() => {
             updateLists();
-
+            
             window.setInterval(updateLists, 5000);
-
+            
             $(document).on('click', '.action-button', handleAction)
-
+            
             $(".clear").on('click', resetNames);
         });
-
+        
         function handleAction(e) {
             const name = e.target.value;
             const action = e.target.innerText;
-
+            
             console.log(`Executing action ${action} on ${name}`);
-
+            
             switch (action) {
                 case 'Remove':
                     removeUser(name, false);
@@ -33,7 +33,7 @@
                     break;
             }
         }
-
+        
         function removeUser(name, banned) {
             $.post('/remove', JSON.stringify({ UserName: name, Banned: banned }), null, 'json').always(() => {
                 console.log(`Removed ${name}, was banned: ${banned}`);
@@ -62,7 +62,7 @@
                 updateBeaversList("active", dataJson.ActiveNames, ["Remove", "Ban"]);
                 updateBeaversList("banned", dataJson.BannedNames, ["Unban"]);
             });
-
+            
             function updateBeaversList(table, names, actions) {
                 let tableHtml = '';
                 for (const name of names) {
@@ -72,7 +72,7 @@
                     }
                     tableHtml += `<tr><td class="name-cell">${name}</td>${actionsHtml}</tr>`;
                 }
-
+                
                 $("#" + table).html(tableHtml);
             }
         }
@@ -87,12 +87,12 @@
             width: 300px;
             margin-right: 15px;
         }
-
+        
         .name-cell {
             font-weight: bold;
             padding-right: 20px;
         }
-
+        
         .clear {
             margin: 5px;
             font-size: 18px;
