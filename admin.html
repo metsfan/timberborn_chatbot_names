@@ -11,6 +11,8 @@
             window.setInterval(updateLists, 5000);
 
             $(document).on('click', '.action-button', handleAction)
+
+            $(".clear").on('click', resetNames);
         });
 
         function handleAction(e) {
@@ -42,6 +44,13 @@
         function unbanUser(name) {
             $.post('/unban', JSON.stringify({ UserName: name }), null, 'json').always(() => {
                 console.log(`Unbanned ${name}`);
+                updateLists();
+            })
+        }
+
+        function resetNames() {
+            $.post('/reset', null, null, 'json').always(() => {
+                console.log(`Names cleared`);
                 updateLists();
             })
         }
@@ -83,9 +92,17 @@
             font-weight: bold;
             padding-right: 20px;
         }
+
+        .clear {
+            margin: 5px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
+<div>
+    <button class="clear">Reset Names</button>
+</div>
 <div class="container">
     <div class="beaverList">
         <h2>Upcoming Beavers</h2>

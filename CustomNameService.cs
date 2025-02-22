@@ -9,6 +9,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -40,20 +41,52 @@ namespace CustomNameList
     }
     
     class CustomNameService {
+        private static string _adminHtmlFile = $"{Path.GetDirectoryName(Paths.ExecutablePath)}/BepInEx/plugins/ChatbotNames/admin.html";
+        private static string _saveFile = $"{Path.GetDirectoryName(Paths.ExecutablePath)}/BepInEx/plugins/ChatbotNames/saved_names.json";
+        
         private List<string> _namesQueue = new();
         private HashSet<string> _activeNames = new();
         private HashSet<string> _bannedNames = new();
         private ManualLogSource _logger;
-        private static string _adminHtmlFile = $"{Path.GetDirectoryName(Paths.ExecutablePath)}/BepInEx/plugins/ChatbotNames/admin.html";
+        private static Timer _saveTimer;
 
         internal bool IsInitialized { get; private set; }
 
         internal void Init(ManualLogSource log) {
             _logger = log;
+
+            if (File.Exists(_saveFile))
+            {
+                var saveData = File.ReadAllText(_saveFile);
+                var loadedNames = JsonConvert.DeserializeObject<AdminListResponse>(saveData);
+                if (loadedNames != null)
+                {
+                    _activeNames = loadedNames.ActiveNames.ToHashSet();
+                    _bannedNames = loadedNames.BannedNames.ToHashSet();
+                    _namesQueue = loadedNames.QueuedNames;
+                }
+            }
             
             Task.Run(StartHttpServer);
 
+            _saveTimer = new Timer(5000);
+            _saveTimer.Elapsed += SaveTimerTick;
+            _saveTimer.Start();
+
             IsInitialized = true;
+        }
+
+        private void SaveTimerTick(object sender, ElapsedEventArgs e)
+        {
+            AdminListResponse savedNames = new()
+            {
+                QueuedNames = _namesQueue,
+                ActiveNames = _activeNames.ToList(),
+                BannedNames = _bannedNames.ToList()
+            };
+            
+            var serializedNames = JsonConvert.SerializeObject(savedNames);
+            File.WriteAllText(_saveFile, serializedNames);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -180,6 +213,12 @@ namespace CustomNameList
                             {
                                 _bannedNames.Remove(requestInput.UserName);
                             }
+                            break;
+                        }
+                        case "/reset" when request.HttpMethod == "POST":
+                        {
+                            _activeNames.Clear();
+                            _namesQueue.Clear();
                             break;
                         }
                         case "/list" when request.HttpMethod == "GET":
