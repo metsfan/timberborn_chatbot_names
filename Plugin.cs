@@ -2,8 +2,6 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Reflection;
-using System.IO;
-using UnityEngine;
 
 namespace CustomNameList
 {
@@ -13,15 +11,13 @@ namespace CustomNameList
     {
         internal static ManualLogSource Log;
 
-        private static string _namesFilePath = $"{Path.GetDirectoryName(Paths.ExecutablePath)}{Path.DirectorySeparatorChar}names.txt";
-
-        internal static CustomNameService NameService = new CustomNameService(_namesFilePath);
+        internal static CustomNameService NameService = new();
 
         private void Awake()
         {
             Log = base.Logger;
 
-            NameService.Init();
+            NameService.Init(Log);
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
